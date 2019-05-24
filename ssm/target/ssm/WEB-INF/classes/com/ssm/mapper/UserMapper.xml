@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.ssm.mapper.UserMapper">
+
+    <select id="getUsers" resultType="com.ssm.bean.TUser">
+        select * from t_user where 1=1
+    </select>
+
+    <insert id="addUser">
+        insert into t_user values (null,#{uno},#{uimage},#{uname},#{upass},#{usex},#{ubirthday},#{uphone},#{uaddress},#{utype})
+    </insert>
+
+    <delete id="deleteuser">
+        delete from t_user where id=#{id}
+    </delete>
+
+    <select id="login" resultType="com.ssm.bean.TUser">
+        select * from t_user where uno=#{uno} and upass=#{upass}
+    </select>
+
+    <select id="getById" resultType="com.ssm.bean.TUser">
+        select * from t_user where id=#{id}
+    </select>
+
+    <delete id="deleteSome" parameterType="arraylist">
+        delete from t_user where
+        <foreach collection="array" index="i" item="id" separator="or">
+            id=#{id}
+        </foreach>
+    </delete>
+
+    <update id="updateUser" parameterType="com.ssm.bean.TUser">
+        update t_user set uname=#{uname},usex=#{usex},ubirthday=#{ubirthday},uaddress=#{uaddress},utype=#{utype} where id=#{id}
+    </update>
+
+    <select id="getUsersById" resultType="TUser">
+        select * from t_user where id in
+        <foreach collection="array" open="(" separator="," close=")" item="id">
+            #{id}
+        </foreach>
+    </select>
+</mapper>

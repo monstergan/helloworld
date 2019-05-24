@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+       http://www.springframework.org/schema/beans/spring-beans.xsd
+       http://www.springframework.org/schema/context
+       http://www.springframework.org/schema/context/spring-context.xsd">
+
+
+    <!--1.扫描包-->
+    <context:component-scan base-package="com.ssm.*"/>
+
+    <!--2.加载属性文件,Spring管理数据源，需要加载配置属性文件-->
+    <bean class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
+        <!--加入有属性找不到，也不会报错-->
+        <property name="ignoreResourceNotFound" value="true"/>
+        <!--要加载的属性文件的位置-->
+        <property name="locations">
+            <list>
+                <value>classpath:jdbc.properties</value>
+            </list>
+        </property>
+    </bean>
+
+    <!--3.SSM框架中 由Spring框架来管理数据源(数据库连接池 德鲁伊)-->
+    <bean id="ds" class="com.alibaba.druid.pool.DruidDataSource">
+        <!--最基础的一个属性-->
+        <property name="driverClassName" value="${jdbcDriver}"/>
+        <property name="url" value="${jdbcUrl}"/>
+        <property name="username" value="${jdbcUsername}"/>
+        <property name="password" value="${jdbcPassword}"/>
+    </bean>
+
+
+    <!--4.MyBatis的session要由Spring来管理-->
+    <bean id="sessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean">
+        <!--把配置好的数据源方进入-->
+        <property name="dataSource" ref="ds"/>
+
+        <!--加载MyBatis的配置文件,如果MyyBayis配置文件中没有配置内容，此步骤可以省-->
+        <property name="configLocation" value="classpath:mybatis-config.xml"/>
+
+        <!--配置Mappper.xml文件所在的位置 -->
+        <property name="mapperLocations" value="classpath:com/ssm/mapper/*.xml"/>
+
+        <!--给所有的实体类取别名-->
+        <property name="typeAliasesPackage" value="com.ssm.bean"/>
+
+    </bean>
+
+    <!--5.Spring扫描Mappper接口层。在底层用代理的方式生成Mapper接口的代理对象-->
+    <bean class="org.mybatis.spring.mapper.MapperScannerConfigurer">
+       <property name="basePackage" value="com.ssm.mapper"/>
+    </bean>
+
+
+    <!--6.配置Spring来管理事务，假设不配置-->
+
+
+
+
+
+
+
+</beans>

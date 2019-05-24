@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.ssm.mapper.ProviderMapper">
+    <select id="getProviders" resultType="com.ssm.bean.TProvider">
+        select * from t_provider where 1=1
+    </select>
+
+    <insert id="addProviders">
+        insert into t_provider values (null ,#{pno},#{pname},#{plinkman},#{pphone},#{pfax},#{pcreatedate})
+    </insert>
+
+    <delete id="deleteProvider">
+        delete from t_provider where pid=#{id}
+    </delete>
+
+    <select id="getById" resultType="com.ssm.bean.TProvider">
+        select * from t_provider where pid=#{pid}
+    </select>
+
+    <update id="updateProvider" parameterType="com.ssm.bean.TProvider">
+        update t_provider set pno=#{pno},pname=#{pname},plinkman=#{plinkman},pphone=#{pphone},pfax=#{pfax},pcreatedate=#{pcreatedate} where pid=#{pid}
+    </update>
+
+    <select id="getpor" resultType="TProvider">
+        select * from t_provider
+    </select>
+</mapper>

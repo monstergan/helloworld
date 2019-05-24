@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.ssm.mapper.BillMapper">
+    <resultMap id="map" type="TBill">
+        <id property="bid" column="bid"/>
+        <result property="bname" column="bname"/>
+        <result property="bnumber" column="bnumber"/>
+        <result property="bmoney" column="bmoney"/>
+        <result property="bpay" column="bpay"/>
+        <result property="providerId" column="provider_id"/>
+        <association property="provider" column="provider_id" javaType="TProvider">
+            <id property="pid" column="pid"/>
+            <result property="pname" column="pname"/>
+        </association>
+    </resultMap>
+
+    <select id="getBills" resultType="map">
+        select * from t_bill inner join t_provider tp on t_bill.provider_id = tp.pid where 1=1
+        <if test="bname!=null and bname !=''">
+            and bname like '%${bname}%'
+        </if>
+        <if test="providerId != -1 and providerId != null ">
+            and provider_id = #{providerId}
+        </if>
+        <if test="bpay != -1 and bpay != null ">
+            and bpay=#{bpay}
+        </if>
+    </select>
+
+    <insert id="addBill" parameterType="TBill">
+        insert into t_bill values (null ,#{bname} ,#{bnumber} ,#{bmoney} ,#{bpay} ,#{providerId})
+    </insert>
+
+    <select id="findBill" resultType="com.ssm.bean.TBill">
+        select * from t_bill inner join t_provider tp on t_bill.provider_id = tp.pid where bid=#{bid}
+    </select>
+
+    <update id="updateBill" parameterType="com.ssm.bean.TBill">
+        update t_bill
+        <set>
+            <if test="bnumber != null">
+                bnumber=#{bnumber},
+            </if>
+            <if test="bname != null and bname != ''">
+                bname=#{bname},
+            </if>
+            <if test="bmoney != null">
+                bmoney=#{bmoney},
+            </if>
+            <if test="bpay != null">
+                bpay=#{bpay},
+            </if>
+
+            <if test="providerId != null">
+                provider_id=#{providerId},
+            </if>
+        </set>
+        where bid=#{bid}
+    </update>
+
+    <delete id="deleteBill" parameterType="int">
+        delete from t_bill where bid=#{value}
+    </delete>
+
+</mapper>
